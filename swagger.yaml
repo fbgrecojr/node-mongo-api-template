@@ -1,0 +1,143 @@
+swagger: '2.0'
+
+info:
+  version: 1.0.0
+  title: Node AppMod Template
+  description: Provides a reference for NM developers
+
+paths:
+  /people:
+    get:
+      description: Get all `People` in the database
+      produces: [application/json]
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: ArrayOfPersons
+            type: array
+            items:
+              $ref: "#/definitions/Person"
+        204:
+          description: No `People` in the database
+        500:
+          description: Databse error
+          
+    post:
+      description: Insert one `Person` into the database
+      produces: [application/json]
+      parameters:
+        - $ref: "#/parameters/people"
+        
+      responses:
+        201:
+          description: Successful response
+          headers:
+            location:
+              description: ID retured by the database
+              type: string
+          schema:
+            title: Person
+            $ref: "#/definitions/Person"
+        400:
+          description: The `Person` entry was not valid
+        500:
+          description: Databse error
+      
+    delete:
+      description: Delete all `People` from the database
+      responses:
+        204:
+          description: Successful response
+        500:
+          description: Databse error
+
+  /person:
+    get:
+      description: Get one `Person` from the database
+      produces: [application/json]
+      parameters:
+        - $ref: "#/parameters/person"
+      responses:
+        200:
+          description: Successful response
+          schema:
+            title: Person
+            $ref: "#/definitions/Person"
+        204:
+          description: No `Person` by given ID
+        500:
+          description: Databse error
+      
+    post:
+      description: Update one `Person` in the database
+      parameters:
+        - $ref: "#/parameters/person"
+      responses:
+        201:
+          description: Successful response
+        400:
+          description: The `Person` update entry was not valid
+        500:
+          description: Databse error
+      
+    delete:
+      description: Delete one `Person` from the database
+      parameters:
+        - $ref: "#/parameters/person"
+      responses:
+        204:
+          description: Successful response
+        400:
+          description: The `Person` was not deleted
+        500:
+          description: Databse error
+      
+definitions:
+  Person:
+    type: object
+    required: [first, last, pictureFileName, department, email, phone, manager, location]
+    properties:
+      _id:
+        description: The ID of the `Person`
+        type: string
+      first:
+        description: The first name of the `Person`
+        type: string
+      last:
+        description: The last name of the `Person`
+        type: string
+      pictureFileName:
+        description: The file path the the picture of the `Person`
+        type: string
+      department:
+        description: The department of the `Person`
+        type: string
+      email:
+        description: The email of the `Person`
+        type: string
+      phone:
+        description: The phone number of the `Person`
+        type: string
+      manager:
+        description: The manager of the `Person`
+        type: string
+      location:
+        description: The location of the `Person`
+        type: string
+        
+parameters:
+  person:
+    name: ID
+    description: ID of the `Person`
+    in: query
+    required: true
+    type: string
+  
+  people:
+    name: Person
+    in: body
+    description: Person to be added
+    required: true
+    schema:
+      $ref: "#/definitions/Person"
